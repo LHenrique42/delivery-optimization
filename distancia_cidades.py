@@ -1,6 +1,8 @@
 from geopy.geocoders import Nominatim 
 from geopy.distance import geodesic
 
+#Algoritmo que calcula a distancia entre duas ruas
+#Calculo feito pelas longitude e latitude
 
 geolocator = Nominatim()
 
