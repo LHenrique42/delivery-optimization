@@ -1,19 +1,45 @@
 import herepy
 import json
 
+
+
 routingApi = herepy.RoutingApi('o6i9v6u7AQdyeVTbJwWw', 'kp3lhUcL0KmT-gODan27iw')
 
 geocoderApi = herepy.GeocoderApi('o6i9v6u7AQdyeVTbJwWw', 'kp3lhUcL0KmT-gODan27iw')
 
 #response2 = routingApi.truck_route([11.0, 12.0], [22.0, 23.0], [herepy.RouteMode.truck, herepy.RouteMode.fastest])
 
-#response = geocoderApi.free_form('407 Rua Nelson Fundao Fatima Sao Mateus Espirito Santo Brasil')
+
+minhaCasa = geocoderApi.free_form('407 Rua Nelson Fundao Fatima Sao Mateus Espirito Santo Brasil')
+data = json.loads(str(minhaCasa))
+
+pontoLatitude= data['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Latitude']
+print("pontoLatitude:", pontoLatitude)
+
+pontoLongitude = data['Response']['View'][0]['Result'][0]['Location']['DisplayPosition']['Longitude']
+print("pontoLongitude:", pontoLongitude)
+
+matEnderecos  = []
+linha = []
+
+linha.append(float(pontoLatitude))
+linha.append(float(pontoLongitude))
+
+matEnderecos.append(linha)
+
+print(matEnderecos)
+
+
+#print(json.dumps(data, indent=4, sort_keys=True))
 
 #response = geocoderApi.street_intersection('Joao Bento Silvares Sao Mateus Espirito Santo Brasil', 'Nelson Fundao Sao Mateus Espirito Santo Brasil')
 
-response = routingApi.car_route([- 18.7176197, -39.8435499],[-18.7164558, -39.844873], [herepy.RouteMode.car, herepy.RouteMode.fastest])
+response = routingApi.truck_route(matEnderecos[0],[-18.7164558, -39.844873], [herepy.RouteMode.car, herepy.RouteMode.fastest])
 #print (response)
 
 data = json.loads(str(response))
-print(json.dumps(data, indent=4, sort_keys=True))
-print (data['response']['route'][0]['summary']['text'])
+#print(json.dumps(data, indent=4, sort_keys=True))
+print("Distancia em metros")
+print (data['response']['route'][0]['summary']['distance'])
+print("Tempo em segundos")
+print (data['response']['route'][0]['summary']['travelTime'])
