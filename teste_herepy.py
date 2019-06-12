@@ -1,4 +1,5 @@
 import herepy
+import json
 
 routingApi = herepy.RoutingApi('o6i9v6u7AQdyeVTbJwWw', 'kp3lhUcL0KmT-gODan27iw')
 
@@ -11,5 +12,8 @@ geocoderApi = herepy.GeocoderApi('o6i9v6u7AQdyeVTbJwWw', 'kp3lhUcL0KmT-gODan27iw
 #response = geocoderApi.street_intersection('Joao Bento Silvares Sao Mateus Espirito Santo Brasil', 'Nelson Fundao Sao Mateus Espirito Santo Brasil')
 
 response = routingApi.car_route([- 18.7176197, -39.8435499],[-18.7164558, -39.844873], [herepy.RouteMode.car, herepy.RouteMode.fastest])
+#print (response)
 
-print (response)
+data = json.loads(str(response))
+print(json.dumps(data, indent=4, sort_keys=True))
+print (data['response']['route'][0]['summary']['text'])
