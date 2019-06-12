@@ -1,7 +1,23 @@
 import herepy
 import json
 
+class Cliente:
+    nome = ""
+    telefone = 0
+    endereco = ''
+    idCarga = 0
+    pesoCarga = 0.0 
 
+    def __init__(self, nome, telefone, endereco, idCarga, pesoCarga):
+        self.nome = nome
+        self.endereco = endereco
+        self.idCarga = idCarga
+        self.pesoCarga = pesoCarga
+
+
+testeCliente = Cliente("Mariana", 999999999, '407 Rua Nelson Fundao Fatima Sao Mateus Espirito Santo Brasil', 1, 10.2)
+
+print(testeCliente.nome)
 
 routingApi = herepy.RoutingApi('o6i9v6u7AQdyeVTbJwWw', 'kp3lhUcL0KmT-gODan27iw')
 
