@@ -1,7 +1,7 @@
 import herepy
 import json
 
-class Cliente:
+class Pedido:
 
     def __init__(self, nome, telefone, endereco, idCarga, pesoCarga):
         self.nome = nome
@@ -9,17 +9,18 @@ class Cliente:
         self.endereco = endereco
         self.idCarga = idCarga
         self.pesoCarga = pesoCarga
+        self.entregue = False 
     
-    def imprimirCliente(self):
+    def imprimirPedido(self):
         print(self.nome + ' ' + self.telefone + ' ' + self.endereco + ' ' + self.idCarga + ' ' + self.pesoCarga)
 
-
-def leituraCliente(nomeArquivo):
+#função que lê um arquivo de entrada com todos os pedidos e retonar um vetor do tipo Pedido contendo todos os pedidos  
+def leituraPedido(nomeArquivo):
 
     arq = open(nomeArquivo, 'r')
     texto = arq.readlines()
 
-    vetorClientes = []
+    vetorPedidos = []
     
     for linha in texto:
         tmp = []
@@ -31,15 +32,12 @@ def leituraCliente(nomeArquivo):
         id = tmp[6]
         peso = tmp[7]
     
-        cliente = Cliente(nome, telefone, endereco,id,peso)
-        vetorClientes.append(cliente)
-        #cliente.imprimirCliente()
+        pedido = Pedido(nome, telefone, endereco,id,peso)
+        vetorPedidos.append(pedido)
+        #pedido.imprimirPedido()
     arq.close()
-#    testeCliente = Cliente("Mariana", 999999999, '407 Rua Nelson Fundao Fatima Sao Mateus Espirito Santo Brasil', 1, 10.2)
 
-#    print(testeCliente.nome)
-
-    return vetorClientes
+    return vetorPedidos
 
 
 
@@ -100,5 +98,13 @@ def calculoDistancias(endereco1, endereco2):
     print("Tempo em segundos")
     print (data['response']['route'][0]['summary']['travelTime'])
 
-lista = leituraCliente('ArquivoEntrada.csv')
-calculoDistancias(lista[0].endereco, lista[1].endereco)
+
+
+def principal():
+
+    lista = leituraPedido('ArquivoEntrada.csv')
+    calculoDistancias(lista[0].endereco, lista[1].endereco)
+
+
+
+principal()
