@@ -94,8 +94,8 @@ def calculoDistancias(endereco1, endereco2):
     data = json.loads(str(response))
     #print(json.dumps(data, indent=4, sort_keys=True))
 
-    print("Distancia em metros")
-    print (data['response']['route'][0]['summary']['distance'])
+    #print("Distancia em metros")
+    #print (data['response']['route'][0]['summary']['distance'])
     #print("Tempo em segundos")
     #print (data['response']['route'][0]['summary']['travelTime'])
 
@@ -114,21 +114,43 @@ def  proxEndereco(ponto1, vetorPedidos, roteiroEntrega):
             menor = distancia
             posMenor = vetorPedidos.index(ponto2)
 
-    vetorPedidos[posMenor].imprimirPedido()
+
+    #Adiciona ao roteiro o pedido com a posicao mais proxima a atual 
+    ponto2.entregue = True
+    roteiroEntrega.append(vetorPedidos[posMenor])
+    #vetorPedidos[posMenor].imprimirPedido()
+
+    #remove o pedido do vetor pois ele ja esta no roteito "foi entrgue"
+    del(vetorPedidos[posMenor])
     
+    return ponto2
 
 
+    
 def principal():
 
     listaEntregas = leituraPedido('entrada.csv')
     roteiroEntrega = []
+
     for pedido in listaEntregas:
         pedido.imprimirPedido()
-    #calculoDistancias(lista[0].endereco, lista[1].endereco)
-    
+
+
     #Posicao do local que fica o deposito
     deposito = "R. Sao Mateus, Sao Mateus - ES, 29938-015"
-    proxEndereco(deposito, listaEntregas, roteiroEntrega)
+    pontoAtual = proxEndereco(deposito, listaEntregas, roteiroEntrega)
+
+    #chamar esse funcao ate todos os pedidos tenham sido atendidos
+    while listaEntregas != []:
+        print("\n")
+        for pedido in listaEntregas:
+            pedido.imprimirPedido()
+        pontoAtual = proxEndereco(pontoAtual.endereco, listaEntregas, roteiroEntrega)
+
+    #Roteiro de Entrega
+    for pedido in roteiroEntrega:
+        pedido.imprimirPedido()
+
 
 
 
