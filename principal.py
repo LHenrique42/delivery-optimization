@@ -14,7 +14,7 @@ class Pedido:
     def imprimirPedido(self):
         print(self.nome + ' ' + self.telefone + ' ' + self.endereco + ' ' + self.idCarga + ' ' + self.pesoCarga)
 
-#função que lê um arquivo de entrada com todos os pedidos e retonar um vetor do tipo Pedido contendo todos os pedidos  
+#funcao que le um arquivo de entrada com todos os pedidos e retonar um vetor do tipo Pedido contendo todos os pedidos  
 def leituraPedido(nomeArquivo):
 
     arq = open(nomeArquivo, 'r')
@@ -39,8 +39,8 @@ def leituraPedido(nomeArquivo):
 
     return vetorPedidos
 
-
-
+#Funcao que calcula a distancia entre duas ruas
+#Leva em consideracao que o transporte esta sendo feito por caminhao
 def calculoDistancias(endereco1, endereco2):
 
     routingApi = herepy.RoutingApi('o6i9v6u7AQdyeVTbJwWw', 'kp3lhUcL0KmT-gODan27iw')
@@ -93,17 +93,42 @@ def calculoDistancias(endereco1, endereco2):
 
     data = json.loads(str(response))
     #print(json.dumps(data, indent=4, sort_keys=True))
+
     print("Distancia em metros")
     print (data['response']['route'][0]['summary']['distance'])
-    print("Tempo em segundos")
-    print (data['response']['route'][0]['summary']['travelTime'])
+    #print("Tempo em segundos")
+    #print (data['response']['route'][0]['summary']['travelTime'])
 
+    return data['response']['route'][0]['summary']['distance']
+
+
+
+def  proxEndereco(ponto1, vetorPedidos, roteiroEntrega):
+
+    menor = calculoDistancias(ponto1, vetorPedidos[0].endereco)
+    posMenor = 0
+
+    for ponto2 in vetorPedidos:
+        distancia = calculoDistancias(ponto1, ponto2.endereco)
+        if menor > distancia:
+            menor = distancia
+            posMenor = vetorPedidos.index(ponto2)
+
+    vetorPedidos[posMenor].imprimirPedido()
+    
 
 
 def principal():
 
-    lista = leituraPedido('ArquivoEntrada.csv')
-    calculoDistancias(lista[0].endereco, lista[1].endereco)
+    listaEntregas = leituraPedido('entrada.csv')
+    roteiroEntrega = []
+    for pedido in listaEntregas:
+        pedido.imprimirPedido()
+    #calculoDistancias(lista[0].endereco, lista[1].endereco)
+    
+    #Posicao do local que fica o deposito
+    deposito = "R. Sao Mateus, Sao Mateus - ES, 29938-015"
+    proxEndereco(deposito, listaEntregas, roteiroEntrega)
 
 
 
