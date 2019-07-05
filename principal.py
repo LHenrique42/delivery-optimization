@@ -13,6 +13,9 @@ class Pedido:
     
     def imprimirPedido(self):
         print(self.nome + ' ' + self.telefone + ' ' + self.endereco + ' ' + self.idCarga + ' ' + self.pesoCarga)
+    
+    def conteudoPedido(self):
+        return self.nome + ' ' + self.telefone + ' ' + self.endereco + ' ' + self.idCarga + ' ' + self.pesoCarga
 
 #funcao que le um arquivo de entrada com todos os pedidos e retonar um vetor do tipo Pedido contendo todos os pedidos  
 def leituraPedido(nomeArquivo):
@@ -126,14 +129,24 @@ def  proxEndereco(ponto1, vetorPedidos, roteiroEntrega):
     return ponto2
 
 
+
+def salvarRoteiro(roteiroEntrega):
+
+    arquivo = open('Roteiro_Entrega.txt','w')
+    for local in roteiroEntrega:
+        arquivo.write(local.conteudoPedido())
+        arquivo.write("\n")
+
+    arquivo.close()
+
     
 def principal():
 
     listaEntregas = leituraPedido('entrada.csv')
     roteiroEntrega = []
 
-    for pedido in listaEntregas:
-        pedido.imprimirPedido()
+    #for pedido in listaEntregas:
+    #    pedido.imprimirPedido()
 
 
     #Posicao do local que fica o deposito
@@ -142,15 +155,12 @@ def principal():
 
     #chamar esse funcao ate todos os pedidos tenham sido atendidos
     while listaEntregas != []:
-        print("\n")
-        for pedido in listaEntregas:
-            pedido.imprimirPedido()
         pontoAtual = proxEndereco(pontoAtual.endereco, listaEntregas, roteiroEntrega)
 
     #Roteiro de Entrega
+    salvarRoteiro(roteiroEntrega)
     for pedido in roteiroEntrega:
         pedido.imprimirPedido()
-
 
 
 
