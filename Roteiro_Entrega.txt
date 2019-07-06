@@ -1,4 +1,32 @@
-   Rua 10 COHAB  Sao Mateus  ES 29937-406 
-   13 de Abril Sernamby Sao Mateus  ES 29930-790 
-   Rua 10 Morada Ribeirao Sao Mateus  ES 29937-540 
-Mariana Ferreira 99999-9999 407 Rua Nelson Fundao Fatima Fatima Sao Mateus  ES 299334-760 1
+Entrega 1: 
+Cliente: Rafael Pereira
+Telefone: 995266068
+Endereco: 2992 Rua Nelio Fantino Sernamby Sao Mateus ES 29930-440
+Id Carga: 1
+Peso Carga: 149
+
+
+Entrega 2: 
+Cliente: Cecília Freitas
+Telefone: 993168435
+Endereco: 2065 Rua Paraju Cacique Sao Mateus ES 29932-250
+Id Carga: 4
+Peso Carga: 192
+
+
+Entrega 3: 
+Cliente: João Miguel Ferreira
+Telefone: 990535202
+Endereco: 5873 Rua Maita Arueira Sao Mateus ES 29942-765
+Id Carga: 3
+Peso Carga: 65
+
+
+Entrega 4: 
+Cliente: Miguel Porto
+Telefone: 997814471
+Endereco: 5681 Rua Conde Seac Sao Mateus ES 29937-330
+Id Carga: 2
+Peso Carga: 93
+
+
