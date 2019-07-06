@@ -3,19 +3,20 @@ import json
 
 class Pedido:
 
-    def __init__(self, nome, telefone, endereco, idCarga, pesoCarga):
+    def __init__(self, nome, telefone, endereco, idCarga, pesoCarga, turno):
         self.nome = nome
         self.telefone = telefone
         self.endereco = endereco
         self.idCarga = idCarga
         self.pesoCarga = pesoCarga
         self.entregue = False 
+        self.turno = turno
     
     def imprimirPedido(self):
-        print('Cliente: ' + self.nome + '\nTelefone: ' + self.telefone + '\nEndereco: ' + self.endereco + '\nId Carga: ' + self.idCarga + '\nPeso Carga: ' + self.pesoCarga + '\n\n')
+        print('Cliente: ' + self.nome + '\nTelefone: ' + self.telefone + '\nEndereco: ' + self.endereco + '\nId Carga: ' + self.idCarga + '\nPeso Carga: ' + self.pesoCarga + '\nTurno: ' + self.turno + '\n\n')
     
     def conteudoPedido(self):
-        return 'Cliente: ' + self.nome + '\nTelefone: ' + self.telefone + '\nEndereco: ' + self.endereco + '\nId Carga: ' + self.idCarga + '\nPeso Carga: ' + self.pesoCarga + '\n\n'
+        return 'Cliente: ' + self.nome + '\nTelefone: ' + self.telefone + '\nEndereco: ' + self.endereco + '\nId Carga: ' + self.idCarga + '\nPeso Carga: ' + self.pesoCarga + '\nTurno: ' + self.turno + '\n\n'
 
 #funcao que le um arquivo de entrada com todos os pedidos e retonar um vetor do tipo Pedido contendo todos os pedidos  
 def leituraPedido(nomeArquivo):
@@ -34,8 +35,9 @@ def leituraPedido(nomeArquivo):
         endereco = tmp [2] + ' ' + tmp[3] + ' ' + tmp[4] + ' ' + tmp[5] + ' ' + tmp[6]
         id = tmp[7]
         peso = tmp[8]
+        turno = tmp[9]
     
-        pedido = Pedido(nome, telefone, endereco,id,peso)
+        pedido = Pedido(nome, telefone, endereco, id, peso, turno)
         vetorPedidos.append(pedido)
         #pedido.imprimirPedido()
     arq.close()
@@ -103,7 +105,8 @@ def calculoDistancias(endereco1, endereco2):
     #print("Tempo em segundos")
     #print (data['response']['route'][0]['summary']['travelTime'])
 
-    return data['response']['route'][0]['summary']['distance']
+    #retorna a distancia e o tempo
+    return data['response']['route'][0]['summary']['distance'], data['response']['route'][0]['summary']['travelTime']
 
 
 
@@ -113,7 +116,7 @@ def  proxEndereco(ponto1, vetorPedidos, roteiroEntrega):
     posMenor = 0
 
     for ponto2 in vetorPedidos:
-        distancia = calculoDistancias(ponto1, ponto2.endereco)
+        distancia, tempo = calculoDistancias(ponto1, ponto2.endereco)
         if menor > distancia:
             menor = distancia
             posMenor = vetorPedidos.index(ponto2)
@@ -132,10 +135,11 @@ def  proxEndereco(ponto1, vetorPedidos, roteiroEntrega):
 
 
 
-def salvarRoteiro(roteiroEntrega):
+def salvarRoteiro(roteiroEntrega, turno):
 
     arquivo = open('Roteiro_Entrega.txt','w')
     i = 1
+    arquivo.write(turno + ': \n\n')
     for local in roteiroEntrega:
         arquivo.write('Entrega ' + str(i) + ': \n')
         arquivo.write(local.conteudoPedido())
@@ -167,10 +171,9 @@ def principal():
 
     print(pesoPreenchido)
     #Roteiro de Entrega
-    salvarRoteiro(roteiroEntrega)
+    salvarRoteiro(roteiroEntrega, 'Turno Integral')
     for pedido in roteiroEntrega:
         pedido.imprimirPedido()
-
 
 
 principal()

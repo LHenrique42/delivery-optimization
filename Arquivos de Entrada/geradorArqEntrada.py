@@ -60,15 +60,18 @@ def gerarArqEntrada():
 
     arquivo = open('entrada.csv','w')
     maxPedidos = random.randrange(1, 20)
+    opTurnos = ['manha', 'tarde']
     i=0
-    print(maxPedidos)
+
     while i<maxPedidos:
         nome = geradorNomesAleatorios()
         telefone = geradorTelefonesAleatorios() 
         endereco = geradorEnderecosAleatorios()
         numId = str(i+1)
         peso = str(random.randrange(1, 200))
-        arquivo.write(nome + ',' + telefone + ',' + endereco + ',' + numId + ',' + peso + '\n')
+        turno = opTurnos[random.randrange(0, 2)]
+        print(turno)
+        arquivo.write(nome + ',' + telefone + ',' + endereco + ',' + numId + ',' + peso + ',' + turno + '\n')
         i+=1
 
     arquivo.close()
