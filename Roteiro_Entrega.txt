@@ -1,15 +1,6 @@
-Turno Integral: 
+Turno da Manha: 
 
 Entrega 1: 
-Cliente: Davi Lucca Ribeiro
-Telefone: 993738540
-Endereco: 2633 Avenida Joao Nardoto Jackeline Sao Mateus ES 29936-160
-Id Carga: 3
-Peso Carga: 173
-Turno: tarde
-
-
-Entrega 2: 
 Cliente: Pietro Pereira
 Telefone: 998555471
 Endereco: 6355 Rua Inacio Alves Barcelos Jackeline Sao Mateus ES 29936-235
@@ -17,17 +8,7 @@ Id Carga: 2
 Peso Carga: 55
 Turno: manha
 
-
-Entrega 3: 
-Cliente: Esther Rezende
-Telefone: 997664457
-Endereco: 7644 Rua General Osorio Sernamby Sao Mateus ES 29930-590
-Id Carga: 7
-Peso Carga: 90
-Turno: tarde
-
-
-Entrega 4: 
+Entrega 2: 
 Cliente: Gustavo Ribeiro
 Telefone: 996501117
 Endereco: 3549 Rua Joao Figueiredo Centro Sao Mateus ES 29930-115
@@ -35,8 +16,7 @@ Id Carga: 4
 Peso Carga: 140
 Turno: manha
 
-
-Entrega 5: 
+Entrega 3: 
 Cliente: Vicente Araújo
 Telefone: 993825301
 Endereco: 7388 Rua Euclides Ferreira do Nascimento Cacique Sao Mateus ES 29932-170
@@ -44,31 +24,11 @@ Id Carga: 1
 Peso Carga: 126
 Turno: manha
 
-
-Entrega 6: 
-Cliente: Luiza Nogueira
-Telefone: 998344814
-Endereco: 8780 Rua Manoel Antonio dos Santos Bela Vista Sao Mateus ES 29931-832
-Id Carga: 6
-Peso Carga: 86
-Turno: tarde
-
-
-Entrega 7: 
-Cliente: Samuel Pereira
-Telefone: 994515784
-Endereco: 2325 Rua Curitiba Bom Jesus Sao Mateus ES 29944-130
-Id Carga: 8
-Peso Carga: 20
-Turno: tarde
-
-
-Entrega 8: 
+Entrega 4: 
 Cliente: Ana Clara Martins
 Telefone: 993501766
 Endereco: 3199 Rua Canoas Nova Era Sao Mateus ES 29940-108
 Id Carga: 5
 Peso Carga: 125
 Turno: manha
-
 

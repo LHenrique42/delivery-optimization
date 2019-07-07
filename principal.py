@@ -17,6 +17,12 @@ class Pedido:
     
     def conteudoPedido(self):
         return 'Cliente: ' + self.nome + '\nTelefone: ' + self.telefone + '\nEndereco: ' + self.endereco + '\nId Carga: ' + self.idCarga + '\nPeso Carga: ' + self.pesoCarga + '\nTurno: ' + self.turno + '\n\n'
+    
+    def comparaTurno(self, turno):
+        if self.turno == turno:
+            return True
+        else:
+            return False
 
 #funcao que le um arquivo de entrada com todos os pedidos e retonar um vetor do tipo Pedido contendo todos os pedidos  
 def leituraPedido(nomeArquivo):
@@ -37,7 +43,7 @@ def leituraPedido(nomeArquivo):
         peso = tmp[8]
         turno = tmp[9]
     
-        pedido = Pedido(nome, telefone, endereco, id, peso, turno)
+        pedido = Pedido(nome, telefone, endereco, id, peso, turno.rstrip())
         vetorPedidos.append(pedido)
         #pedido.imprimirPedido()
     arq.close()
@@ -102,42 +108,46 @@ def calculoDistancias(endereco1, endereco2):
     print(endereco1 + " - " + endereco2)
     print("Distancia em metros")
     print (data['response']['route'][0]['summary']['distance'])
-    #print("Tempo em segundos")
-    #print (data['response']['route'][0]['summary']['travelTime'])
+    print("Tempo em segundos")
+    print (data['response']['route'][0]['summary']['travelTime'])
 
     #retorna a distancia e o tempo
     return data['response']['route'][0]['summary']['distance'], data['response']['route'][0]['summary']['travelTime']
 
 
 
-def  proxEndereco(ponto1, vetorPedidos, roteiroEntrega):
+def  proxEndereco(ponto1, vetorPedidos, roteiroEntrega, turno):
 
-    menor = calculoDistancias(ponto1, vetorPedidos[0].endereco)
+    menor = 100000000000000
     posMenor = 0
+    tempoEntrega = -1
 
     for ponto2 in vetorPedidos:
-        distancia, tempo = calculoDistancias(ponto1, ponto2.endereco)
-        if menor > distancia:
-            menor = distancia
-            posMenor = vetorPedidos.index(ponto2)
+        if turno == ponto2.turno:
+            distancia, tempo = calculoDistancias(ponto1, ponto2.endereco)
+            if menor > distancia:
+                menor = distancia
+                tempoEntrega = tempo
+                posMenor = vetorPedidos.index(ponto2)
+
+    if tempoEntrega != -1:
+        ponto2 = vetorPedidos[posMenor]
+
+        #Adiciona ao roteiro o pedido com a posicao mais proxima a atual 
+        ponto2.entregue = True
+        roteiroEntrega.append(ponto2)
+
+        #remove o pedido do vetor pois ele ja esta no roteito "foi entrgue"
+        del(vetorPedidos[posMenor])
+    else:
+        ponto1 = ponto2
+    return ponto2, tempoEntrega
 
 
-    ponto2 = vetorPedidos[posMenor]
 
-    #Adiciona ao roteiro o pedido com a posicao mais proxima a atual 
-    ponto2.entregue = True
-    roteiroEntrega.append(ponto2)
+def salvarRoteiro(roteiroEntrega, turno, opcaoEscrita):
 
-    #remove o pedido do vetor pois ele ja esta no roteito "foi entrgue"
-    del(vetorPedidos[posMenor])
-    
-    return ponto2
-
-
-
-def salvarRoteiro(roteiroEntrega, turno):
-
-    arquivo = open('Roteiro_Entrega.txt','w')
+    arquivo = open('Roteiro_Entrega.txt', opcaoEscrita)
     i = 1
     arquivo.write(turno + ': \n\n')
     for local in roteiroEntrega:
@@ -155,6 +165,9 @@ def principal():
 
     pesoMaxCaminhao = 5000
     pesoPreenchido = 0
+    tempoViagem = 0
+    tempoTurno = 0
+    i = 0
 
     for pedido in listaEntregas:
         pedido.imprimirPedido()
@@ -162,18 +175,58 @@ def principal():
 
     #Posicao do local que fica o deposito
     deposito = "R. Sao Mateus, Sao Mateus - ES, 29938-015"
-    pontoAtual = proxEndereco(deposito, listaEntregas, roteiroEntrega)
+    pontoAtual, tempoViagem = proxEndereco(deposito, listaEntregas, roteiroEntrega, 'manha')
+    if  tempoViagem != -1:
+        pesoPreenchido += int(pontoAtual.pesoCarga)
+        # O tempo para fazer a entraga leva em media 30 minutos = 1800 segundos
+        tempoTurno = tempoTurno + tempoViagem + 1800
+        print(tempoTurno)
+
+    ##############  Turno da Manha ####################
 
     #chamar esse funcao ate todos os pedidos tenham sido atendidos
-    while listaEntregas != [] and pesoMaxCaminhao >= pesoPreenchido:
-        pontoAtual = proxEndereco(pontoAtual.endereco, listaEntregas, roteiroEntrega)
-        pesoPreenchido += int(pontoAtual.pesoCarga)
+    #Quando o tempoViagem for igual a -1 significa que nao tem mais entregas nesse turno
+    # O turno da manha tem uma duracao de 3.5 horas = 126000 segundos
 
-    print(pesoPreenchido)
-    #Roteiro de Entrega
-    salvarRoteiro(roteiroEntrega, 'Turno Integral')
-    for pedido in roteiroEntrega:
-        pedido.imprimirPedido()
+    while i<len(listaEntregas) and pesoMaxCaminhao >= pesoPreenchido and tempoTurno < 126000:
+        pontoAtual, tempoViagem = proxEndereco(pontoAtual.endereco, listaEntregas, roteiroEntrega, "manha")
+        if  tempoViagem != -1:
+            pesoPreenchido += int(pontoAtual.pesoCarga)
+            # O tempo para fazer a entraga leva em media 30 minutos = 1800 segundos
+            tempoTurno = tempoTurno + tempoViagem + 1800
+        else:
+            i+=1
+        
+    salvarRoteiro(roteiroEntrega, 'Turno da Manha', 'w')
+    
+    #inicializando variaveis novamente
+    tempoTurno = 0
+    tempoViagem = 0
+    i=0
+    roteiroEntrega = []
+
+        ##############  Turno da Tarde ####################
+
+    #chamar esse funcao ate todos os pedidos tenham sido atendidos
+    #Quando o tempoViagem for igual a -1 significa que nao tem mais entregas nesse turno
+    # O turno da tarde tem uma duracao de 4.5 horas = 162000 segundos
+
+    while i<len(listaEntregas) and pesoMaxCaminhao >= pesoPreenchido and tempoTurno < 162000:
+        pontoAtual, tempoViagem = proxEndereco(pontoAtual.endereco, listaEntregas, roteiroEntrega, "tarde")
+        if  tempoViagem != -1:
+            pesoPreenchido += int(pontoAtual.pesoCarga)
+            # O tempo para fazer a entraga leva em media 30 minutos = 1800 segundos
+            tempoTurno = tempoTurno + tempoViagem + 1800
+        else:
+            i+=1
+        
+    salvarRoteiro(roteiroEntrega, 'Turno da Tarde', 'a')
+
+
+    if listaEntregas != [] and pesoMaxCaminhao >= pesoPreenchido:
+        salvarRoteiro(listaEntregas, 'Nao Foi Possivel Fazer a Entraga', 'a')
+      
+        
 
 
 principal()
